@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
                 binding.btnStart.icon = getDrawable(R.drawable.ic_pause)
                 binding.btnStop.isEnabled = true
                 binding.fabAddInterval.hide()
-                binding.checkboxCircular.isEnabled = false
+                binding.switchCircular.isEnabled = false
             }
         }
 
@@ -126,7 +126,8 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         intervalAdapter = TimerIntervalAdapter(
             mutableListOf(),
             onEditClick = { position, interval -> showEditIntervalDialog(position, interval) },
-            onDeleteClick = { position -> deleteInterval(position) }
+            onDeleteClick = { position -> deleteInterval(position) },
+            onDuplicateClick = { position, interval -> duplicateInterval(position, interval) }
         )
 
         binding.rvTimerSequence.apply {
@@ -232,6 +233,21 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         updateEmptyState()
     }
 
+    private fun duplicateInterval(position: Int, interval: TimerInterval) {
+        // Create a copy of the interval
+        val duplicatedInterval = TimerInterval(
+            interval.minutes,
+            interval.seconds,
+            interval.name?.let { "$it (Copy)" }
+        )
+        
+        // Insert the duplicated interval right after the original
+        intervalAdapter.insertInterval(position + 1, duplicatedInterval)
+        
+        // Update empty state after adding
+        updateEmptyState()
+    }
+
     private fun checkNotificationPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when (PackageManager.PERMISSION_GRANTED) {
@@ -284,7 +300,7 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         
         // Set up and start timer
         timerService?.setIntervals(intervals)
-        timerService?.setCircular(binding.checkboxCircular.isChecked)
+        timerService?.setCircular(binding.switchCircular.isChecked)
         timerService?.startTimer()
         isPaused = false
         
@@ -293,7 +309,7 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         binding.btnStart.icon = getDrawable(R.drawable.ic_pause)
         binding.btnStop.isEnabled = true
         binding.fabAddInterval.hide() // Hide FAB when timer is running
-        binding.checkboxCircular.isEnabled = false
+        binding.switchCircular.isEnabled = false
     }
 
     private fun pauseTimer() {
@@ -332,7 +348,7 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         binding.btnStart.icon = getDrawable(R.drawable.ic_play)
         binding.btnStop.isEnabled = false
         binding.fabAddInterval.show() // Show FAB when timer is stopped
-        binding.checkboxCircular.isEnabled = true
+        binding.switchCircular.isEnabled = true
         binding.tvLapCounter.visibility = android.view.View.GONE
         
         // Stop the service
@@ -352,7 +368,7 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         binding.btnStart.icon = getDrawable(R.drawable.ic_play)
         binding.btnStop.isEnabled = false
         binding.fabAddInterval.show() // Show FAB when timer is stopped
-        binding.checkboxCircular.isEnabled = true
+        binding.switchCircular.isEnabled = true
         binding.tvLapCounter.visibility = android.view.View.GONE
         
         // Stop the service
@@ -412,10 +428,10 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
             binding.btnStart.icon = getDrawable(R.drawable.ic_play)
             binding.btnStop.isEnabled = false
             binding.fabAddInterval.show() // Show FAB when timer is completed
-            binding.checkboxCircular.isEnabled = true
+            binding.switchCircular.isEnabled = true
             
             // Keep lap counter visible when circular is enabled, otherwise hide it
-            if (!binding.checkboxCircular.isChecked) {
+            if (!binding.switchCircular.isChecked) {
                 binding.tvLapCounter.visibility = android.view.View.GONE
                 Toast.makeText(this, R.string.timer_completed, Toast.LENGTH_SHORT).show()
             }

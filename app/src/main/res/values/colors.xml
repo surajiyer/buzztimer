@@ -20,4 +20,12 @@
     <color name="light_gray">#E0E0E0</color>
     <color name="timer_text">#212121</color>
     <color name="text_secondary">#757575</color>
+    
+    <!-- Toggle switch colors -->
+    <color name="toggle_purple">#9C27B0</color>
+    <color name="toggle_purple_light">#E1BEE7</color>
+    <color name="toggle_track_off">#E0E0E0</color>
+    
+    <!-- Interval card colors -->
+    <color name="interval_card_background">#F3E5F5</color>
 </resources>

@@ -3,11 +3,13 @@
     <string name="app_name">BuzzTimer</string>
     <string name="add_interval">Add Interval</string>
     <string name="circular_sequence">Circular Sequence</string>
+    <string name="circular_sequence_description">Repeat intervals in order</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="reset">Reset</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="duplicate_interval">Duplicate interval</string>
     <string name="set_interval_time">Set Interval Time</string>
     <string name="minutes">Minutes</string>
     <string name="seconds">Seconds</string>
@@ -19,7 +21,7 @@
     <string name="invalid_time">Please enter a valid time (seconds should be less than 60)</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
-    <string name="drag_to_reorder">Drag to reorder intervals</string>
+    <string name="drag_to_reorder">Drag card to reorder intervals</string>
     <string name="interval_name_hint">Interval Name (optional)</string>
     <string name="no_intervals_message">No intervals yet.\nCreate your first interval to get started!</string>
     <string name="current_interval">Current Interval: %1$s</string>

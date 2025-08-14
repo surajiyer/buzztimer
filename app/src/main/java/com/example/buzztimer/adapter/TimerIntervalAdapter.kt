@@ -16,7 +16,8 @@ import java.util.Collections
 class TimerIntervalAdapter(
     private val intervals: MutableList<TimerInterval>,
     private val onEditClick: (position: Int, interval: TimerInterval) -> Unit,
-    private val onDeleteClick: (position: Int) -> Unit
+    private val onDeleteClick: (position: Int) -> Unit,
+    private val onDuplicateClick: (position: Int, interval: TimerInterval) -> Unit
 ) : RecyclerView.Adapter<TimerIntervalAdapter.ViewHolder>() {
 
     private var itemTouchHelper: ItemTouchHelper? = null
@@ -24,8 +25,8 @@ class TimerIntervalAdapter(
 
     inner class ViewHolder(val binding: ItemTimerIntervalBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            // Set up drag handle touch listener
-            binding.ivDragHandle.setOnTouchListener { _, event ->
+            // Set up drag listener for the entire card
+            binding.mainCard.setOnTouchListener { _, event ->
                 if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                     itemTouchHelper?.startDrag(this)
                 }
@@ -62,6 +63,10 @@ class TimerIntervalAdapter(
 
         holder.binding.btnDelete.setOnClickListener {
             onDeleteClick(holder.adapterPosition)
+        }
+
+        holder.binding.btnDuplicate.setOnClickListener {
+            onDuplicateClick(holder.adapterPosition, interval)
         }
     }
 
@@ -105,6 +110,14 @@ class TimerIntervalAdapter(
         intervals.add(interval)
         notifyItemInserted(intervals.size - 1)
         recyclerView?.scrollToPosition(intervals.size - 1)
+    }
+
+    fun insertInterval(position: Int, interval: TimerInterval) {
+        if (position in 0..intervals.size) {
+            intervals.add(position, interval)
+            notifyItemInserted(position)
+            recyclerView?.scrollToPosition(position)
+        }
     }
 
     fun updateInterval(position: Int, interval: TimerInterval) {

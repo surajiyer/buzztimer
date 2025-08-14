@@ -11,4 +11,7 @@
     <color name="light_gray">#222222</color> <!-- Slightly lighter for visibility -->
     <color name="timer_text">#FFFFFF</color> <!-- White for high contrast -->
     <color name="text_secondary">#CCCCCC</color> <!-- Lighter gray for better readability -->
+    
+    <!-- Interval card colors for dark theme -->
+    <color name="interval_card_background">#1A1A2E</color> <!-- Dark purple for night mode -->
 </resources>
