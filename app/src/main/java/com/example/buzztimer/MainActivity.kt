@@ -1,6 +1,8 @@
 package com.example.buzztimer
 
 import android.Manifest
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Context
@@ -389,6 +391,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     override fun onIntervalComplete(intervalIndex: Int) {
         // Update UI on main thread
         runOnUiThread {
+            // Show visual flash effect for immediate feedback
+            showIntervalCompleteFlash()
+            
             // Reset progress for next interval
             binding.timerProgressIndicator.progress = 0
             
@@ -431,5 +436,47 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
                 Toast.makeText(this, R.string.timer_completed, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    
+    /**
+     * Creates a full-screen flash effect when an interval completes
+     * Overlays the entire screen with a bright flash for immediate visual feedback
+     */
+    private fun showIntervalCompleteFlash() {
+        // Create a full-screen flash overlay
+        val flashOverlay = android.view.View(this)
+        flashOverlay.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+        flashOverlay.alpha = 0f
+        
+        // Add the overlay to the root layout
+        val rootLayout = binding.root as androidx.coordinatorlayout.widget.CoordinatorLayout
+        val layoutParams = androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams(
+            androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams.MATCH_PARENT,
+            androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams.MATCH_PARENT
+        )
+        rootLayout.addView(flashOverlay, layoutParams)
+        
+        // Create flash animation - fade in quickly, hold, then fade out
+        val flashAnimator = ValueAnimator.ofFloat(0f, 0.8f, 0.8f, 0f)
+        flashAnimator.duration = 400 // 400ms total flash duration
+        flashAnimator.addUpdateListener { animator ->
+            val alpha = animator.animatedValue as Float
+            flashOverlay.alpha = alpha
+        }
+        
+        // Remove the overlay when animation completes
+        flashAnimator.addListener(object : android.animation.Animator.AnimatorListener {
+            override fun onAnimationStart(animation: android.animation.Animator) {}
+            override fun onAnimationCancel(animation: android.animation.Animator) {
+                rootLayout.removeView(flashOverlay)
+            }
+            override fun onAnimationRepeat(animation: android.animation.Animator) {}
+            override fun onAnimationEnd(animation: android.animation.Animator) {
+                rootLayout.removeView(flashOverlay)
+            }
+        })
+        
+        // Start the flash animation
+        flashAnimator.start()
     }
 }
