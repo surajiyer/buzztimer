@@ -35,6 +35,7 @@ class ForegroundTimerService : Service() {
         private const val CHANNEL_ID = "buzztimer_channel"
         private const val CHANNEL_NAME = "BuzzTimer Notifications"
         private const val UPDATE_INTERVAL = 100L // 100ms update interval for smoother countdown
+        private const val NOTIFICATION_UPDATE_INTERVAL = 1000L // Update notification every 1 second
         private const val WAKE_LOCK_TAG = "BuzzTimer:WakeLock"
     }
 
@@ -59,6 +60,7 @@ class ForegroundTimerService : Service() {
     private var remainingTimeMillis: Long = 0
     private var targetEndTime: Long = 0
     private var lapCount: Int = 0
+    private var lastNotificationUpdate: Long = 0
     
     // For handling vibration
     private lateinit var vibrator: Vibrator
@@ -181,7 +183,7 @@ class ForegroundTimerService : Service() {
             removeTimerCallbacks()
             isRunning = false
             isPaused = true
-            updateNotification()
+            forceUpdateNotification()
         }
     }
     
@@ -194,7 +196,7 @@ class ForegroundTimerService : Service() {
             isRunning = true
             isPaused = false
             scheduleNextTick()
-            updateNotification()
+            forceUpdateNotification()
         }
     }
     
@@ -251,7 +253,7 @@ class ForegroundTimerService : Service() {
         targetEndTime = SystemClock.elapsedRealtime() + totalMillis
         
         // Update notification and start timer
-        updateNotification()
+        forceUpdateNotification()
         removeTimerCallbacks()
         scheduleNextTick()
     }
@@ -288,9 +290,16 @@ class ForegroundTimerService : Service() {
                     stopTimer()
                 }
             } else {
-                // Update listener and notification, then schedule next tick
+                // Update listener on every tick for smooth UI
                 timerListener?.onTimerTick(remainingTimeMillis)
-                updateNotification()
+                
+                // Update notification only every second to avoid throttling
+                val now = SystemClock.elapsedRealtime()
+                if (now - lastNotificationUpdate >= NOTIFICATION_UPDATE_INTERVAL) {
+                    updateNotification()
+                    lastNotificationUpdate = now
+                }
+                
                 scheduleNextTick()
             }
         }
@@ -318,12 +327,13 @@ class ForegroundTimerService : Service() {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
                 description = "Timer notifications"
                 setShowBadge(false)
                 enableVibration(false)
                 enableLights(false)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             }
             
             val notificationManager = getSystemService(NotificationManager::class.java)
@@ -374,6 +384,14 @@ class ForegroundTimerService : Service() {
     private fun updateNotification() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, buildNotification())
+    }
+    
+    /**
+     * Force update the notification immediately (used for state changes)
+     */
+    private fun forceUpdateNotification() {
+        updateNotification()
+        lastNotificationUpdate = SystemClock.elapsedRealtime()
     }
     
     /**
