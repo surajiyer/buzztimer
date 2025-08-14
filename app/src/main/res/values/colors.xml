@@ -5,7 +5,6 @@
     <color name="white">#FFFFFFFF</color>
     
     <!-- BuzzTimer theme colors -->
-    <color name="ic_launcher_background">#A64DFF</color>
     <color name="primary">#A64DFF</color>
     <color name="primary_dark">#8B3EE6</color>
     <color name="accent">#A64DFF</color>
