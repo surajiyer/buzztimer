@@ -409,20 +409,37 @@ class ForegroundTimerService : Service() {
      * Trigger vibration when an interval completes
      */
     private fun triggerVibration() {
-        // Create a simpler vibration pattern with only a single pulse
-        if (vibrator.hasVibrator()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // For Android 8.0+, use a vibration effect with stronger amplitude
-                vibrator.vibrate(
-                    VibrationEffect.createWaveform(
-                        longArrayOf(0, 800),  // Timing pattern: wait, vibrate (single vibration)
-                        intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE),  // Amplitude pattern
-                        -1  // Don't repeat
+        // Acquire a temporary wake lock to ensure vibration works even when screen is off
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val vibrationWakeLock = powerManager.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "$WAKE_LOCK_TAG:vibration"
+        )
+        
+        try {
+            // Acquire wake lock for a short duration to ensure vibration
+            vibrationWakeLock.acquire(5000L) // 5 seconds should be enough
+            
+            // Create a simpler vibration pattern with only a single pulse
+            if (vibrator.hasVibrator()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // For Android 8.0+, use a vibration effect with stronger amplitude
+                    vibrator.vibrate(
+                        VibrationEffect.createWaveform(
+                            longArrayOf(0, 800),  // Timing pattern: wait, vibrate (single vibration)
+                            intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE),  // Amplitude pattern
+                            -1  // Don't repeat
+                        )
                     )
-                )
-            } else {
-                @Suppress("DEPRECATION")
-                vibrator.vibrate(longArrayOf(0, 800), -1)  // Pattern for older devices (single vibration)
+                } else {
+                    @Suppress("DEPRECATION")
+                    vibrator.vibrate(longArrayOf(0, 800), -1)  // Pattern for older devices (single vibration)
+                }
+            }
+        } finally {
+            // Release the temporary wake lock
+            if (vibrationWakeLock.isHeld) {
+                vibrationWakeLock.release()
             }
         }
     }

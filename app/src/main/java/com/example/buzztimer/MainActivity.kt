@@ -12,9 +12,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +40,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     private var isBound: Boolean = false
 
     private var isPaused: Boolean = false
+    
+    // Screen wake lock to keep screen on during timer
+    private var screenWakeLock: PowerManager.WakeLock? = null
     
     // Connection to the foreground service
     private val serviceConnection = object : ServiceConnection {
@@ -124,6 +129,13 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         super.onPause()
         // Save current state when app goes to background
         saveCurrentData()
+        
+        // Only release screen wake lock if timer is not running or is paused
+        // This allows the screen to turn off when user puts app in background
+        val isTimerActive = timerService?.isTimerRunning() == true && !isPaused
+        if (!isTimerActive) {
+            releaseScreenWakeLock()
+        }
     }
     
     override fun onStop() {
@@ -132,8 +144,20 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         // We'll only unbind when explicitly stopping the timer
     }
     
+    override fun onResume() {
+        super.onResume()
+        // Re-acquire screen wake lock if timer is running and not paused
+        val isTimerActive = timerService?.isTimerRunning() == true && !isPaused
+        if (isTimerActive) {
+            acquireScreenWakeLock()
+        }
+    }
+    
     override fun onDestroy() {
         super.onDestroy()
+        // Always release screen wake lock when activity is destroyed
+        releaseScreenWakeLock()
+        
         if (isBound) {
             unbindService(serviceConnection)
             isBound = false
@@ -359,6 +383,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         timerService?.startTimer()
         isPaused = false
         
+        // Keep screen awake while timer is running
+        acquireScreenWakeLock()
+        
         // Update UI for timer running state
         binding.btnStart.text = getString(R.string.pause)
         binding.btnStart.icon = getDrawable(R.drawable.ic_pause)
@@ -370,6 +397,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     private fun pauseTimer() {
         timerService?.pauseTimer()
         isPaused = true
+        
+        // Allow screen to turn off when paused
+        releaseScreenWakeLock()
         
         // Update UI for paused state
         binding.btnStart.text = getString(R.string.resume)
@@ -387,6 +417,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         timerService?.resumeTimer()
         isPaused = false
         
+        // Keep screen awake while timer is running
+        acquireScreenWakeLock()
+        
         // Update UI for resumed state
         binding.btnStart.text = getString(R.string.pause)
         binding.btnStart.icon = getDrawable(R.drawable.ic_pause)
@@ -395,6 +428,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     private fun stopAndResetTimer() {
         timerService?.resetTimer()
         isPaused = false
+        
+        // Allow screen to turn off when timer is stopped
+        releaseScreenWakeLock()
         
         // Clear active interval highlighting
         intervalAdapter.clearActiveInterval()
@@ -417,6 +453,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     private fun stopTimer() {
         timerService?.stopTimer()
         isPaused = false
+        
+        // Allow screen to turn off when timer is stopped
+        releaseScreenWakeLock()
         
         // Reset UI to initial state
         binding.tvCurrentTimer.text = "00:00"
@@ -475,6 +514,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     override fun onSequenceComplete() {
         // Update UI on main thread
         runOnUiThread {
+            // Allow screen to turn off when timer sequence completes
+            releaseScreenWakeLock()
+            
             // Clear active interval highlighting
             intervalAdapter.clearActiveInterval()
             
@@ -609,5 +651,32 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     private fun openAbout() {
         val intent = Intent(this, AboutActivity::class.java)
         startActivity(intent)
+    }
+    
+    /**
+     * Keep the screen awake while timer is running
+     */
+    private fun acquireScreenWakeLock() {
+        // Release any existing wake lock first
+        releaseScreenWakeLock()
+        
+        // Use FLAG_KEEP_SCREEN_ON approach which is simpler and more reliable
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+    
+    /**
+     * Allow the screen to turn off when timer is not running
+     */
+    private fun releaseScreenWakeLock() {
+        // Remove the screen-on flag
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        
+        // Also release any PowerManager wake lock if we had one
+        screenWakeLock?.let {
+            if (it.isHeld) {
+                it.release()
+            }
+            screenWakeLock = null
+        }
     }
 }

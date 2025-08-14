@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- BuzzTimer dark theme colors optimized for OLED displays -->
+    <color name="ic_launcher_background">#A64DFF</color> <!-- Same purple for icon consistency -->
     <color name="primary">#A64DFF</color> <!-- Unified purple for consistency -->
     <color name="primary_dark">#8B3EE6</color> <!-- Darker shade of unified purple -->
     <color name="accent">#A64DFF</color> <!-- Unified purple for consistency -->
