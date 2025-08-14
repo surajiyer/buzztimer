@@ -6,8 +6,6 @@
     <string name="circular_sequence_description">Repeat intervals in order</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
-    <string name="reset">Reset</string>
-    <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="duplicate_interval">Duplicate interval</string>
     <string name="set_interval_time">Set Interval Time</string>
@@ -21,13 +19,10 @@
     <string name="invalid_time">Please enter a valid time (seconds should be less than 60)</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
-    <string name="drag_to_reorder">Drag card to reorder intervals</string>
     <string name="interval_name_hint">Interval Name (optional)</string>
-    <string name="no_intervals_message">No intervals yet.\nCreate your first interval to get started!</string>
+    <string name="no_intervals_message">No intervals yet.\nTap the + to get started!</string>
     <string name="current_interval">Current Interval: %1$s</string>
     <string name="next_interval">Next: %1$s</string>
-    <string name="get_started">Get started</string>
-    <string name="create_first_interval">Create your first interval</string>
     <string name="remaining_time">Remaining time</string>
     <string name="edit_interval">Edit interval</string>
     <string name="delete_interval">Delete interval</string>

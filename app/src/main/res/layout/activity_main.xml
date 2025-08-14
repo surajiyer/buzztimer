@@ -52,21 +52,10 @@
                 android:text="@string/no_intervals_message"
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toTopOf="@+id/btnGetStarted"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivEmptyState" />
-                
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGetStarted"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/create_first_interval"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvEmptyStateMessage" />
+                app:layout_constraintTop_toBottomOf="@+id/ivEmptyState" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Content layout -->
@@ -262,23 +251,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:padding="16dp"
             android:gravity="center">
             
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnStop"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.BuzzTimer.Button.Stop"
+                android:layout_marginEnd="8dp"
                 android:text="@string/stop"
                 android:enabled="false"
                 app:icon="@drawable/ic_stop_square" />
                 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnStart"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                style="@style/Widget.BuzzTimer.Button.Start"
+                android:layout_marginStart="8dp"
                 android:text="@string/start"
                 app:icon="@drawable/ic_play" />
         </LinearLayout>
@@ -290,7 +283,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="120dp"
         android:contentDescription="@string/add_interval"
         app:srcCompat="@drawable/ic_add"
         style="@style/Widget.BuzzTimer.FloatingActionButton" />

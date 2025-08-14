@@ -161,11 +161,6 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         binding.fabAddInterval.setOnClickListener {
             showEditIntervalDialog()
         }
-        
-        // Setup "Get Started" button in empty state
-        binding.btnGetStarted.setOnClickListener {
-            showEditIntervalDialog()
-        }
 
         // Setup main control buttons
         binding.btnStart.setOnClickListener {
@@ -196,7 +191,7 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         }
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle(if (position == -1) R.string.add_interval else R.string.edit)
+            .setTitle(if (position == -1) R.string.add_interval else R.string.edit_interval)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.save) { _, _ ->
                 val name = dialogBinding.etIntervalName.text.toString().trim()

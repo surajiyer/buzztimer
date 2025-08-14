@@ -20,8 +20,6 @@
         <item name="windowNoTitle">true</item>
         
         <!-- Text appearance for better readability in dark mode -->
-        <item name="textAppearanceHeadline1">@style/TextAppearance.BuzzTimer.Headline1.Dark</item>
-        <item name="textAppearanceHeadline2">@style/TextAppearance.BuzzTimer.Headline2.Dark</item>
         <item name="textAppearanceBody1">@style/TextAppearance.BuzzTimer.Body1.Dark</item>
         <item name="textAppearanceBody2">@style/TextAppearance.BuzzTimer.Body2.Dark</item>
         
@@ -32,20 +30,6 @@
     </style>
     
     <!-- Dark mode optimized text styles -->
-    <style name="TextAppearance.BuzzTimer.Headline1.Dark" parent="TextAppearance.MaterialComponents.Headline1">
-        <item name="fontFamily">sans-serif-light</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">72sp</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-    
-    <style name="TextAppearance.BuzzTimer.Headline2.Dark" parent="TextAppearance.MaterialComponents.Headline2">
-        <item name="fontFamily">sans-serif</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">48sp</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-    
     <style name="TextAppearance.BuzzTimer.Body1.Dark" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">sans-serif</item>
         <item name="android:fontFamily">sans-serif</item>

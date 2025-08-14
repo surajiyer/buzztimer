@@ -67,7 +67,7 @@
                 android:contentDescription="@string/edit_interval"
                 app:icon="@drawable/ic_edit"
                 app:iconSize="20dp"
-                app:iconTint="@color/toggle_purple"
+                app:iconTint="@color/timer_text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -85,7 +85,7 @@
         android:contentDescription="@string/duplicate_interval"
         app:icon="@drawable/ic_duplicate"
         app:iconSize="18dp"
-        app:iconTint="@color/toggle_purple"
+        app:iconTint="@color/text_secondary"
         app:layout_constraintEnd_toStartOf="@+id/btnDelete"
         app:layout_constraintTop_toTopOf="parent" />
 
