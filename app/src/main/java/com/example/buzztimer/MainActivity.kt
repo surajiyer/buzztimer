@@ -13,11 +13,14 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.buzztimer.activity.SettingsActivity
 import com.example.buzztimer.adapter.TimerIntervalAdapter
 import com.example.buzztimer.databinding.ActivityMainBinding
 import com.example.buzztimer.databinding.DialogEditIntervalBinding
@@ -498,5 +501,60 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         
         // Start the flash animation
         flashAnimator.start()
+    }
+    
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+    
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_clear_all -> {
+                showClearAllIntervalsDialog()
+                true
+            }
+            R.id.menu_settings -> {
+                openSettings()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+    
+    private fun showClearAllIntervalsDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.clear_all_title)
+            .setMessage(R.string.clear_all_confirmation)
+            .setPositiveButton(R.string.clear_all) { _, _ ->
+                clearAllIntervals()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+    
+    private fun clearAllIntervals() {
+        // Stop timer if running
+        if (timerService?.isTimerRunning() == true) {
+            stopTimer()
+        }
+        
+        // Clear all intervals
+        val intervals = intervalAdapter.getIntervals().toMutableList()
+        repeat(intervals.size) {
+            intervalAdapter.removeInterval(0)
+        }
+        
+        // Update empty state
+        updateEmptyState()
+        
+        Toast.makeText(this, R.string.all_intervals_cleared, Toast.LENGTH_SHORT).show()
+    }
+    
+    private fun openSettings() {
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
     }
 }

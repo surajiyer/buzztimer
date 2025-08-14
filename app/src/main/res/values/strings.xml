@@ -8,6 +8,13 @@
     <string name="stop">Stop</string>
     <string name="duplicate_interval">Duplicate interval</string>
     <string name="delete_interval">Delete interval</string>
+    <string name="clear_all_intervals">Clear all intervals</string>
+    <string name="settings">Settings</string>
+    <string name="menu_options">Menu options</string>
+    <string name="clear_all_confirmation">Are you sure you want to delete all intervals? This action cannot be undone.</string>
+    <string name="clear_all_title">Clear All Intervals</string>
+    <string name="clear_all">Clear All</string>
+    <string name="all_intervals_cleared">All intervals cleared</string>
 
     <string name="set_interval_time">Set Interval Time</string>
     <string name="minutes">Minutes</string>
