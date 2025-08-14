@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BuzzTimer dark theme colors optimized for OLED displays -->
+    <color name="primary">#D987FF</color> <!-- Brighter purple for better contrast -->
+    <color name="primary_dark">#9356E0</color> <!-- More vibrant purple for better visibility -->
+    <color name="accent">#00E5CF</color> <!-- Brighter teal for better visibility -->
+    <color name="accent_dark">#00B2A3</color> <!-- More vibrant teal for better visibility -->
+    <color name="background">#000000</color> <!-- True black for OLED power saving -->
+    <color name="surface">#0A0A0A</color> <!-- Near-black for card surfaces -->
+    <color name="error">#FF5C5C</color> <!-- Brighter red for better visibility -->
+    <color name="light_gray">#222222</color> <!-- Slightly lighter for visibility -->
+    <color name="timer_text">#FFFFFF</color> <!-- White for high contrast -->
+    <color name="text_secondary">#CCCCCC</color> <!-- Lighter gray for better readability -->
+</resources>

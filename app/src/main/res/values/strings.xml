@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BuzzTimer</string>
+    <string name="add_interval">Add Interval</string>
+    <string name="circular_sequence">Circular Sequence</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="reset">Reset</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="set_interval_time">Set Interval Time</string>
+    <string name="minutes">Minutes</string>
+    <string name="seconds">Seconds</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="interval_format">%1$d min %2$d sec</string>
+    <string name="no_intervals_added">No intervals added. Add at least one interval to start the timer.</string>
+    <string name="timer_completed">Timer completed!</string>
+    <string name="invalid_time">Please enter a valid time (seconds should be less than 60)</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="drag_to_reorder">Drag to reorder intervals</string>
+    <string name="interval_name_hint">Interval Name (optional)</string>
+    <string name="no_intervals_message">No intervals yet.\nCreate your first interval to get started!</string>
+    <string name="current_interval">Current Interval: %1$s</string>
+    <string name="next_interval">Next: %1$s</string>
+    <string name="get_started">Get started</string>
+    <string name="create_first_interval">Create your first interval</string>
+    <string name="remaining_time">Remaining time</string>
+    <string name="edit_interval">Edit interval</string>
+    <string name="delete_interval">Delete interval</string>
+    <string name="interval_complete">Interval complete!</string>
+    <string name="interval_complete_named">%1$s interval complete!</string>
+    <string name="notification_timer_running">Running: %1$s</string>
+    <string name="request_notifications_permission">BuzzTimer needs notification permission to work properly in background</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="timer_paused">Timer Paused</string>
+    <string name="lap_counter">Lap: %1$d</string>
+</resources>
