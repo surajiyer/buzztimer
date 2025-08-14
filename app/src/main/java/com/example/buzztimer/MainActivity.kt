@@ -546,6 +546,58 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         }
     }
     
+    override fun onTimerPaused() {
+        // Update UI on main thread when timer is paused from notification
+        runOnUiThread {
+            isPaused = true
+            
+            // Allow screen to turn off when paused
+            releaseScreenWakeLock()
+            
+            // Update UI for paused state
+            binding.btnStart.text = getString(R.string.resume)
+            binding.btnStart.icon = getDrawable(R.drawable.ic_play)
+            binding.btnStop.isEnabled = true
+        }
+    }
+    
+    override fun onTimerResumed() {
+        // Update UI on main thread when timer is resumed from notification
+        runOnUiThread {
+            isPaused = false
+            
+            // Keep screen awake while timer is running
+            acquireScreenWakeLock()
+            
+            // Update UI for resumed state
+            binding.btnStart.text = getString(R.string.pause)
+            binding.btnStart.icon = getDrawable(R.drawable.ic_pause)
+        }
+    }
+    
+    override fun onTimerStopped() {
+        // Update UI on main thread when timer is stopped from notification
+        runOnUiThread {
+            isPaused = false
+            
+            // Allow screen to turn off when timer is stopped
+            releaseScreenWakeLock()
+            
+            // Clear active interval highlighting
+            intervalAdapter.clearActiveInterval()
+            
+            // Reset UI to initial state
+            binding.tvCurrentTimer.text = "00:00"
+            binding.timerProgressIndicator.progress = 0
+            binding.btnStart.text = getString(R.string.start)
+            binding.btnStart.icon = getDrawable(R.drawable.ic_play)
+            binding.btnStop.isEnabled = false
+            binding.fabAddInterval.show() // Show FAB when timer is stopped
+            binding.switchCircular.isEnabled = true
+            binding.tvLapCounter.visibility = android.view.View.GONE
+        }
+    }
+    
     /**
      * Creates a full-screen flash effect when an interval completes
      * Overlays the entire screen with a bright flash for immediate visual feedback

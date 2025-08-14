@@ -37,6 +37,11 @@ class ForegroundTimerService : Service() {
         private const val UPDATE_INTERVAL = 100L // 100ms update interval for smoother countdown
         private const val NOTIFICATION_UPDATE_INTERVAL = 1000L // Update notification every 1 second
         private const val WAKE_LOCK_TAG = "BuzzTimer:WakeLock"
+        
+        // Notification action constants
+        const val ACTION_PAUSE = "com.example.buzztimer.ACTION_PAUSE"
+        const val ACTION_RESUME = "com.example.buzztimer.ACTION_RESUME"
+        const val ACTION_STOP = "com.example.buzztimer.ACTION_STOP"
     }
 
     interface TimerListener {
@@ -45,6 +50,9 @@ class ForegroundTimerService : Service() {
         fun onSequenceComplete()
         fun onLapCountChanged(lapCount: Int)
         fun onCurrentIntervalChanged(intervalIndex: Int)
+        fun onTimerPaused()
+        fun onTimerResumed()
+        fun onTimerStopped()
     }
 
     // Binder given to clients
@@ -89,6 +97,19 @@ class ForegroundTimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Handle notification actions
+        when (intent?.action) {
+            ACTION_PAUSE -> {
+                pauseTimer()
+            }
+            ACTION_RESUME -> {
+                resumeTimer()
+            }
+            ACTION_STOP -> {
+                resetTimer()
+            }
+        }
+        
         // Return sticky to ensure service restarts if killed
         return START_STICKY
     }
@@ -184,6 +205,7 @@ class ForegroundTimerService : Service() {
             isRunning = false
             isPaused = true
             forceUpdateNotification()
+            timerListener?.onTimerPaused()
         }
     }
     
@@ -197,6 +219,7 @@ class ForegroundTimerService : Service() {
             isPaused = false
             scheduleNextTick()
             forceUpdateNotification()
+            timerListener?.onTimerResumed()
         }
     }
     
@@ -217,6 +240,7 @@ class ForegroundTimerService : Service() {
             stopForeground(true)
         }
         releaseWakeLock()
+        timerListener?.onTimerStopped()
     }
     
     /**
@@ -367,15 +391,62 @@ class ForegroundTimerService : Service() {
             )
         }
         
-        return NotificationCompat.Builder(this, CHANNEL_ID)
+        // Create notification builder
+        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(contentText)
             .setSmallIcon(R.drawable.ic_empty_timer)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .build()
+        
+        // Add action buttons based on current state
+        if (isPaused) {
+            // When paused, show Resume and Stop buttons
+            val resumeIntent = Intent(this, ForegroundTimerService::class.java).apply {
+                action = ACTION_RESUME
+            }
+            val resumePendingIntent = PendingIntent.getService(
+                this, 1, resumeIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            
+            notificationBuilder.addAction(
+                R.drawable.ic_play, 
+                getString(R.string.resume), 
+                resumePendingIntent
+            )
+        } else {
+            // When running, show Pause button
+            val pauseIntent = Intent(this, ForegroundTimerService::class.java).apply {
+                action = ACTION_PAUSE
+            }
+            val pausePendingIntent = PendingIntent.getService(
+                this, 2, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            
+            notificationBuilder.addAction(
+                R.drawable.ic_pause, 
+                getString(R.string.pause), 
+                pausePendingIntent
+            )
+        }
+        
+        // Always show Stop button
+        val stopIntent = Intent(this, ForegroundTimerService::class.java).apply {
+            action = ACTION_STOP
+        }
+        val stopPendingIntent = PendingIntent.getService(
+            this, 3, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        
+        notificationBuilder.addAction(
+            R.drawable.ic_stop, 
+            getString(R.string.stop), 
+            stopPendingIntent
+        )
+        
+        return notificationBuilder.build()
     }
     
     /**
