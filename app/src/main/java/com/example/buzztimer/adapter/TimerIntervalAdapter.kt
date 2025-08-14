@@ -20,7 +20,8 @@ class TimerIntervalAdapter(
     private val intervals: MutableList<TimerInterval>,
     private val onEditClick: (position: Int, interval: TimerInterval) -> Unit,
     private val onDeleteClick: (position: Int) -> Unit,
-    private val onDuplicateClick: (position: Int, interval: TimerInterval) -> Unit
+    private val onDuplicateClick: (position: Int, interval: TimerInterval) -> Unit,
+    private val onItemMoved: (() -> Unit)? = null
 ) : RecyclerView.Adapter<TimerIntervalAdapter.ViewHolder>() {
 
     private var itemTouchHelper: ItemTouchHelper? = null
@@ -127,6 +128,10 @@ class TimerIntervalAdapter(
                 // Swap items in the list
                 Collections.swap(intervals, fromPos, toPos)
                 notifyItemMoved(fromPos, toPos)
+                
+                // Notify that items were moved
+                onItemMoved?.invoke()
+                
                 return true
             }
 

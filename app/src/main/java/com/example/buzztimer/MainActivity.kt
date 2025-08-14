@@ -26,11 +26,13 @@ import com.example.buzztimer.databinding.ActivityMainBinding
 import com.example.buzztimer.databinding.DialogEditIntervalBinding
 import com.example.buzztimer.model.TimerInterval
 import com.example.buzztimer.service.ForegroundTimerService
+import com.example.buzztimer.util.IntervalStorage
 
 class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var intervalAdapter: TimerIntervalAdapter
+    private lateinit var intervalStorage: IntervalStorage
     private var timerService: ForegroundTimerService? = null
     private var isBound: Boolean = false
 
@@ -88,10 +90,14 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         // Set up toolbar
         setSupportActionBar(binding.toolbar)
         
+        // Initialize storage
+        intervalStorage = IntervalStorage(this)
+        
         // Bind to the service
         bindTimerService()
 
         setupRecyclerView()
+        loadSavedData()
         setupButtons()
         updateEmptyState()
         setupProgressIndicator()
@@ -113,6 +119,12 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         }
     }
     
+    override fun onPause() {
+        super.onPause()
+        // Save current state when app goes to background
+        saveCurrentData()
+    }
+    
     override fun onStop() {
         super.onStop()
         // Don't unbind - we want the service to continue running
@@ -132,7 +144,8 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
             mutableListOf(),
             onEditClick = { position, interval -> showEditIntervalDialog(position, interval) },
             onDeleteClick = { position -> deleteInterval(position) },
-            onDuplicateClick = { position, interval -> duplicateInterval(position, interval) }
+            onDuplicateClick = { position, interval -> duplicateInterval(position, interval) },
+            onItemMoved = { saveCurrentData() }
         )
 
         binding.rvTimerSequence.apply {
@@ -142,6 +155,26 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
             // Set up drag-to-reorder functionality
             intervalAdapter.attachToRecyclerView(this)
         }
+    }
+    
+    private fun loadSavedData() {
+        // Load saved intervals
+        val savedIntervals = intervalStorage.loadIntervals()
+        savedIntervals.forEach { interval ->
+            intervalAdapter.addInterval(interval)
+        }
+        
+        // Load circular sequence setting
+        val isCircular = intervalStorage.loadCircularSequence()
+        binding.switchCircular.isChecked = isCircular
+    }
+    
+    private fun saveCurrentData() {
+        // Save current intervals
+        intervalStorage.saveIntervals(intervalAdapter.getIntervals())
+        
+        // Save circular sequence setting
+        intervalStorage.saveCircularSequence(binding.switchCircular.isChecked)
     }
     
     private fun updateEmptyState() {
@@ -182,6 +215,12 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
 
         binding.btnStop.setOnClickListener {
             stopAndResetTimer()
+        }
+        
+        // Setup circular sequence toggle listener
+        binding.switchCircular.setOnCheckedChangeListener { _, _ ->
+            // Save setting when changed
+            saveCurrentData()
         }
     }
 
@@ -230,7 +269,8 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
                     intervalAdapter.updateInterval(position, newInterval)
                 }
                 
-                // Update empty state after adding/editing
+                // Save data and update empty state after adding/editing
+                saveCurrentData()
                 updateEmptyState()
             }
             .setNegativeButton(R.string.cancel, null)
@@ -241,7 +281,8 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
 
     private fun deleteInterval(position: Int) {
         intervalAdapter.removeInterval(position)
-        // Update empty state after deleting
+        // Save data and update empty state after deleting
+        saveCurrentData()
         updateEmptyState()
     }
 
@@ -256,7 +297,8 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         // Insert the duplicated interval right after the original
         intervalAdapter.insertInterval(position + 1, duplicatedInterval)
         
-        // Update empty state after adding
+        // Save data and update empty state after adding
+        saveCurrentData()
         updateEmptyState()
     }
 
@@ -547,7 +589,8 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
             intervalAdapter.removeInterval(0)
         }
         
-        // Update empty state
+        // Save cleared state and update empty state
+        saveCurrentData()
         updateEmptyState()
         
         Toast.makeText(this, R.string.all_intervals_cleared, Toast.LENGTH_SHORT).show()
