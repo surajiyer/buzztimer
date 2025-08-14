@@ -36,8 +36,6 @@
     <string name="resume">Resume</string>
     <string name="interval_name_hint">Interval Name (optional)</string>
     <string name="no_intervals_message">No intervals yet.\nTap the + to get started!</string>
-    <string name="current_interval">Current Interval: %1$s</string>
-    <string name="next_interval">Next: %1$s</string>
     <string name="remaining_time">Remaining time</string>
     <string name="edit_interval">Edit interval</string>
     <string name="interval_options">Interval options</string>
