@@ -200,6 +200,18 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
                 val minutes = dialogBinding.etMinutes.text.toString().toIntOrNull() ?: 0
                 val seconds = dialogBinding.etSeconds.text.toString().toIntOrNull() ?: 0
 
+                // Validate that time is not 0m 0s
+                if (minutes == 0 && seconds == 0) {
+                    Toast.makeText(this, R.string.invalid_zero_time, Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                // Validate that time values are not negative
+                if (minutes < 0 || seconds < 0) {
+                    Toast.makeText(this, R.string.invalid_negative_time, Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
                 if (seconds >= 60) {
                     Toast.makeText(this, R.string.invalid_time, Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
@@ -399,12 +411,6 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
             
             // Reset progress for next interval
             binding.timerProgressIndicator.progress = 0
-            
-            // Show toast with interval name if available
-            val interval = timerService?.getIntervals()?.getOrNull(intervalIndex)
-            interval?.name?.let { name ->
-                Toast.makeText(this, getString(R.string.interval_complete_named, name), Toast.LENGTH_SHORT).show()
-            } ?: Toast.makeText(this, getString(R.string.interval_complete), Toast.LENGTH_SHORT).show()
         }
     }
     

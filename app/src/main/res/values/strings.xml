@@ -18,6 +18,8 @@
     <string name="no_intervals_added">No intervals added. Add at least one interval to start the timer.</string>
     <string name="timer_completed">Timer completed!</string>
     <string name="invalid_time">Please enter a valid time (seconds should be less than 60)</string>
+    <string name="invalid_zero_time">Please enter a time greater than 0 minutes and 0 seconds</string>
+    <string name="invalid_negative_time">Please enter positive time values</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
     <string name="interval_name_hint">Interval Name (optional)</string>
@@ -28,8 +30,6 @@
     <string name="edit_interval">Edit interval</string>
     <string name="interval_options">Interval options</string>
 
-    <string name="interval_complete">Interval complete!</string>
-    <string name="interval_complete_named">%1$s interval complete!</string>
     <string name="notification_timer_running">Running: %1$s</string>
     <string name="request_notifications_permission">BuzzTimer needs notification permission to work properly in background</string>
     <string name="permission_required">Permission Required</string>
