@@ -20,6 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.buzztimer.activity.AboutActivity
 import com.example.buzztimer.activity.SettingsActivity
 import com.example.buzztimer.adapter.TimerIntervalAdapter
 import com.example.buzztimer.databinding.ActivityMainBinding
@@ -560,6 +561,10 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
                 openSettings()
                 true
             }
+            R.id.menu_about -> {
+                openAbout()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -598,6 +603,11 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     
     private fun openSettings() {
         val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+    }
+    
+    private fun openAbout() {
+        val intent = Intent(this, AboutActivity::class.java)
         startActivity(intent)
     }
 }
