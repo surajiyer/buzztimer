@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@ import com.example.buzztimer.model.TimerInterval
 import java.util.Collections
 
 /**
- * Adapter for displaying and managing timer intervals with drag-to-reorder functionality
+ * Adapter for displaying and managing timer intervals with drag-to-reorder and menu functionality
  */
 class TimerIntervalAdapter(
     private val intervals: MutableList<TimerInterval>,
@@ -64,24 +65,43 @@ class TimerIntervalAdapter(
         if (position == activeIntervalIndex) {
             startPulsingAnimation(holder, position)
         } else {
-            stopPulsingAnimation(holder, position)
+            stopPulsingAnimation(position)
             // Reset to normal background
             val normalColor = ContextCompat.getColor(holder.itemView.context, R.color.interval_card_background)
             holder.binding.mainCard.setCardBackgroundColor(normalColor)
         }
 
-        // Set click listeners
-        holder.binding.btnEdit.setOnClickListener {
-            onEditClick(holder.adapterPosition, interval)
+        // Set menu click listener
+        holder.binding.btnMenu.setOnClickListener { view ->
+            showPopupMenu(view, position, interval)
         }
+    }
 
-        holder.binding.btnDelete.setOnClickListener {
-            onDeleteClick(holder.adapterPosition)
+    /**
+     * Shows the popup menu for interval options
+     */
+    private fun showPopupMenu(view: android.view.View, position: Int, interval: TimerInterval) {
+        val popup = PopupMenu(view.context, view)
+        popup.menuInflater.inflate(R.menu.interval_options_menu, popup.menu)
+        
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_edit -> {
+                    onEditClick(position, interval)
+                    true
+                }
+                R.id.menu_duplicate -> {
+                    onDuplicateClick(position, interval)
+                    true
+                }
+                R.id.menu_delete -> {
+                    onDeleteClick(position)
+                    true
+                }
+                else -> false
+            }
         }
-
-        holder.binding.btnDuplicate.setOnClickListener {
-            onDuplicateClick(holder.adapterPosition, interval)
-        }
+        popup.show()
     }
 
     override fun getItemCount() = intervals.size
@@ -94,7 +114,7 @@ class TimerIntervalAdapter(
         
         val touchHelperCallback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-            0
+            0 // No swipe directions
         ) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -111,7 +131,7 @@ class TimerIntervalAdapter(
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                // Not using swipe functionality
+                // No swipe functionality - this method is required but not used
             }
         }
 
@@ -180,7 +200,7 @@ class TimerIntervalAdapter(
      */
     private fun startPulsingAnimation(holder: ViewHolder, position: Int) {
         // Stop any existing animation for this position
-        stopPulsingAnimation(holder, position)
+        stopPulsingAnimation(position)
         
         val context = holder.itemView.context
         val normalColor = ContextCompat.getColor(context, R.color.interval_card_background)
@@ -206,7 +226,7 @@ class TimerIntervalAdapter(
     /**
      * Stops the pulsing animation for a specific position
      */
-    private fun stopPulsingAnimation(holder: ViewHolder, position: Int) {
+    private fun stopPulsingAnimation(position: Int) {
         animators[position]?.let { animator ->
             animator.cancel()
             animators.remove(position)

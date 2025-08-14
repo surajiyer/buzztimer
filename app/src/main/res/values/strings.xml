@@ -6,8 +6,9 @@
     <string name="circular_sequence_description">Repeat intervals in order</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
-    <string name="delete">Delete</string>
     <string name="duplicate_interval">Duplicate interval</string>
+    <string name="delete_interval">Delete interval</string>
+
     <string name="set_interval_time">Set Interval Time</string>
     <string name="minutes">Minutes</string>
     <string name="seconds">Seconds</string>
@@ -25,7 +26,8 @@
     <string name="next_interval">Next: %1$s</string>
     <string name="remaining_time">Remaining time</string>
     <string name="edit_interval">Edit interval</string>
-    <string name="delete_interval">Delete interval</string>
+    <string name="interval_options">Interval options</string>
+
     <string name="interval_complete">Interval complete!</string>
     <string name="interval_complete_named">%1$s interval complete!</string>
     <string name="notification_timer_running">Running: %1$s</string>

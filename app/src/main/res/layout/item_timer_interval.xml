@@ -11,12 +11,11 @@
         android:id="@+id/mainCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         app:cardBackgroundColor="@color/interval_card_background"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnDuplicate"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -37,7 +36,7 @@
                 android:textSize="20sp"
                 android:textStyle="normal"
                 app:layout_constraintBottom_toTopOf="@+id/tvIntervalTime"
-                app:layout_constraintEnd_toStartOf="@+id/btnEdit"
+                app:layout_constraintEnd_toStartOf="@+id/btnMenu"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
@@ -54,18 +53,18 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnEdit"
+                app:layout_constraintEnd_toStartOf="@+id/btnMenu"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvIntervalName"
                 tools:text="3 min 0 sec" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEdit"
+                android:id="@+id/btnMenu"
                 style="?attr/materialIconButtonStyle"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:contentDescription="@string/edit_interval"
-                app:icon="@drawable/ic_edit"
+                android:contentDescription="@string/interval_options"
+                app:icon="@drawable/ic_more_vert"
                 app:iconSize="20dp"
                 app:iconTint="@color/timer_text"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -74,32 +73,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
-    <!-- Duplicate button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDuplicate"
-        style="?attr/materialIconButtonStyle"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginEnd="4dp"
-        android:contentDescription="@string/duplicate_interval"
-        app:icon="@drawable/ic_duplicate"
-        app:iconSize="18dp"
-        app:iconTint="@color/text_secondary"
-        app:layout_constraintEnd_toStartOf="@+id/btnDelete"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Delete button outside the colored card -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDelete"
-        style="?attr/materialIconButtonStyle"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:contentDescription="@string/delete_interval"
-        app:icon="@drawable/ic_delete"
-        app:iconSize="18dp"
-        app:iconTint="@color/error"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
