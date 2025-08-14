@@ -1,8 +1,10 @@
 package com.example.buzztimer.adapter
 
+import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.buzztimer.R
@@ -22,6 +24,8 @@ class TimerIntervalAdapter(
 
     private var itemTouchHelper: ItemTouchHelper? = null
     private var recyclerView: RecyclerView? = null
+    private var activeIntervalIndex: Int = -1
+    private val animators = mutableMapOf<Int, ValueAnimator>()
 
     inner class ViewHolder(val binding: ItemTimerIntervalBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
@@ -55,6 +59,16 @@ class TimerIntervalAdapter(
             interval.minutes,
             interval.seconds
         )
+
+        // Handle active interval highlighting
+        if (position == activeIntervalIndex) {
+            startPulsingAnimation(holder, position)
+        } else {
+            stopPulsingAnimation(holder, position)
+            // Reset to normal background
+            val normalColor = ContextCompat.getColor(holder.itemView.context, R.color.interval_card_background)
+            holder.binding.mainCard.setCardBackgroundColor(normalColor)
+        }
 
         // Set click listeners
         holder.binding.btnEdit.setOnClickListener {
@@ -135,4 +149,79 @@ class TimerIntervalAdapter(
     }
 
     fun getIntervals(): List<TimerInterval> = intervals.toList()
+    
+    /**
+     * Sets the currently active interval index and updates the visual highlighting
+     */
+    fun setActiveInterval(index: Int) {
+        val previousActiveIndex = activeIntervalIndex
+        activeIntervalIndex = index
+        
+        // Update the previous active item (if any)
+        if (previousActiveIndex != -1 && previousActiveIndex != index) {
+            notifyItemChanged(previousActiveIndex)
+        }
+        
+        // Update the new active item (if valid)
+        if (index != -1 && index < intervals.size) {
+            notifyItemChanged(index)
+        }
+    }
+    
+    /**
+     * Clears the active interval highlighting
+     */
+    fun clearActiveInterval() {
+        setActiveInterval(-1)
+    }
+    
+    /**
+     * Starts a pulsing animation for the active interval card
+     */
+    private fun startPulsingAnimation(holder: ViewHolder, position: Int) {
+        // Stop any existing animation for this position
+        stopPulsingAnimation(holder, position)
+        
+        val context = holder.itemView.context
+        val normalColor = ContextCompat.getColor(context, R.color.interval_card_background)
+        val highlightColor = ContextCompat.getColor(context, R.color.primary)
+        
+        // Create a subtle pulsing effect by blending colors
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.duration = 1500 // 1.5 seconds for a slow, gentle pulse
+        animator.repeatCount = ValueAnimator.INFINITE
+        animator.repeatMode = ValueAnimator.REVERSE
+        
+        animator.addUpdateListener { animation ->
+            val progress = animation.animatedValue as Float
+            // Create a subtle blend between normal and highlight colors
+            val blendedColor = blendColors(normalColor, highlightColor, progress * 0.3f) // 30% max blend
+            holder.binding.mainCard.setCardBackgroundColor(blendedColor)
+        }
+        
+        animator.start()
+        animators[position] = animator
+    }
+    
+    /**
+     * Stops the pulsing animation for a specific position
+     */
+    private fun stopPulsingAnimation(holder: ViewHolder, position: Int) {
+        animators[position]?.let { animator ->
+            animator.cancel()
+            animators.remove(position)
+        }
+    }
+    
+    /**
+     * Blends two colors together with a given ratio
+     */
+    private fun blendColors(color1: Int, color2: Int, ratio: Float): Int {
+        val inverseRatio = 1f - ratio
+        val r = (android.graphics.Color.red(color1) * inverseRatio + android.graphics.Color.red(color2) * ratio).toInt()
+        val g = (android.graphics.Color.green(color1) * inverseRatio + android.graphics.Color.green(color2) * ratio).toInt()
+        val b = (android.graphics.Color.blue(color1) * inverseRatio + android.graphics.Color.blue(color2) * ratio).toInt()
+        val a = (android.graphics.Color.alpha(color1) * inverseRatio + android.graphics.Color.alpha(color2) * ratio).toInt()
+        return android.graphics.Color.argb(a, r, g, b)
+    }
 }

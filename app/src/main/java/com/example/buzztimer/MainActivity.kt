@@ -338,6 +338,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
         timerService?.resetTimer()
         isPaused = false
         
+        // Clear active interval highlighting
+        intervalAdapter.clearActiveInterval()
+        
         // Reset UI to initial state
         binding.tvCurrentTimer.text = "00:00"
         binding.timerProgressIndicator.progress = 0
@@ -420,6 +423,9 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
     override fun onSequenceComplete() {
         // Update UI on main thread
         runOnUiThread {
+            // Clear active interval highlighting
+            intervalAdapter.clearActiveInterval()
+            
             // Reset UI when sequence completes
             binding.tvCurrentTimer.text = "00:00"
             binding.timerProgressIndicator.progress = 0
@@ -435,6 +441,14 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
                 binding.tvLapCounter.visibility = android.view.View.GONE
                 Toast.makeText(this, R.string.timer_completed, Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+    
+    override fun onCurrentIntervalChanged(intervalIndex: Int) {
+        // Update UI on main thread
+        runOnUiThread {
+            // Update the adapter to highlight the current interval
+            intervalAdapter.setActiveInterval(intervalIndex)
         }
     }
     

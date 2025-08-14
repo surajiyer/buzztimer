@@ -43,6 +43,7 @@ class ForegroundTimerService : Service() {
         fun onIntervalComplete(intervalIndex: Int)
         fun onSequenceComplete()
         fun onLapCountChanged(lapCount: Int)
+        fun onCurrentIntervalChanged(intervalIndex: Int)
     }
 
     // Binder given to clients
@@ -225,6 +226,7 @@ class ForegroundTimerService : Service() {
         currentIntervalIndex = 0
         lapCount = 0
         timerListener?.onLapCountChanged(lapCount)
+        timerListener?.onCurrentIntervalChanged(-1) // No active interval when reset
     }
     
     /**
@@ -240,6 +242,9 @@ class ForegroundTimerService : Service() {
         currentIntervalIndex = index
         val interval = intervals[index]
         val totalMillis = interval.getTotalTimeMillis()
+        
+        // Notify listener about the current interval change
+        timerListener?.onCurrentIntervalChanged(currentIntervalIndex)
         
         // Set up timing parameters
         remainingTimeMillis = totalMillis
