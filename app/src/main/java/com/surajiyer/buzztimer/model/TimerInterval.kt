@@ -1,4 +1,4 @@
-package com.example.buzztimer.model
+package com.surajiyer.buzztimer.model
 
 /**
  * Represents a time interval for the timer

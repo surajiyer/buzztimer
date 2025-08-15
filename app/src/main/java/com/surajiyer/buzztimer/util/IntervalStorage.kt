@@ -1,8 +1,8 @@
-package com.example.buzztimer.util
+package com.surajiyer.buzztimer.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.buzztimer.model.TimerInterval
+import com.surajiyer.buzztimer.model.TimerInterval
 import org.json.JSONArray
 import org.json.JSONObject
 

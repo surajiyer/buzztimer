@@ -1,4 +1,4 @@
-package com.example.buzztimer
+package com.surajiyer.buzztimer
 
 import android.Manifest
 import android.animation.ArgbEvaluator
@@ -22,14 +22,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.buzztimer.activity.AboutActivity
-import com.example.buzztimer.activity.SettingsActivity
-import com.example.buzztimer.adapter.TimerIntervalAdapter
-import com.example.buzztimer.databinding.ActivityMainBinding
-import com.example.buzztimer.databinding.DialogEditIntervalBinding
-import com.example.buzztimer.model.TimerInterval
-import com.example.buzztimer.service.ForegroundTimerService
-import com.example.buzztimer.util.IntervalStorage
+import com.surajiyer.buzztimer.activity.AboutActivity
+import com.surajiyer.buzztimer.activity.SettingsActivity
+import com.surajiyer.buzztimer.adapter.TimerIntervalAdapter
+import com.surajiyer.buzztimer.databinding.ActivityMainBinding
+import com.surajiyer.buzztimer.databinding.DialogEditIntervalBinding
+import com.surajiyer.buzztimer.model.TimerInterval
+import com.surajiyer.buzztimer.service.ForegroundTimerService
+import com.surajiyer.buzztimer.util.IntervalStorage
 
 class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
 

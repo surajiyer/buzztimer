@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.buzztimer'
+    namespace 'com.surajiyer.buzztimer'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.buzztimer"
+        applicationId "com.surajiyer.buzztimer"
         minSdk 24
         targetSdk 34
         versionCode 1

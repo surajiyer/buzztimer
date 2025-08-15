@@ -1,4 +1,4 @@
-package com.example.buzztimer.service
+package com.surajiyer.buzztimer.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -18,9 +18,9 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.core.app.NotificationCompat
-import com.example.buzztimer.MainActivity
-import com.example.buzztimer.R
-import com.example.buzztimer.model.TimerInterval
+import com.surajiyer.buzztimer.MainActivity
+import com.surajiyer.buzztimer.R
+import com.surajiyer.buzztimer.model.TimerInterval
 import java.util.concurrent.TimeUnit
 
 /**
@@ -39,9 +39,9 @@ class ForegroundTimerService : Service() {
         private const val WAKE_LOCK_TAG = "BuzzTimer:WakeLock"
         
         // Notification action constants
-        const val ACTION_PAUSE = "com.example.buzztimer.ACTION_PAUSE"
-        const val ACTION_RESUME = "com.example.buzztimer.ACTION_RESUME"
-        const val ACTION_STOP = "com.example.buzztimer.ACTION_STOP"
+        const val ACTION_PAUSE = "com.surajiyer.buzztimer.ACTION_PAUSE"
+        const val ACTION_RESUME = "com.surajiyer.buzztimer.ACTION_RESUME"
+        const val ACTION_STOP = "com.surajiyer.buzztimer.ACTION_STOP"
     }
 
     interface TimerListener {

@@ -1,4 +1,4 @@
-package com.example.buzztimer.adapter
+package com.surajiyer.buzztimer.adapter
 
 import android.animation.ValueAnimator
 import android.view.LayoutInflater
@@ -8,9 +8,9 @@ import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.buzztimer.R
-import com.example.buzztimer.databinding.ItemTimerIntervalBinding
-import com.example.buzztimer.model.TimerInterval
+import com.surajiyer.buzztimer.R
+import com.surajiyer.buzztimer.databinding.ItemTimerIntervalBinding
+import com.surajiyer.buzztimer.model.TimerInterval
 import java.util.Collections
 
 /**

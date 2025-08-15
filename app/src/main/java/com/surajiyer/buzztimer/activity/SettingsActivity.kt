@@ -1,9 +1,9 @@
-package com.example.buzztimer.activity
+package com.surajiyer.buzztimer.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.buzztimer.R
-import com.example.buzztimer.databinding.ActivitySettingsBinding
+import com.surajiyer.buzztimer.R
+import com.surajiyer.buzztimer.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
     
