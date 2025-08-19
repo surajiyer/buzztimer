@@ -504,7 +504,7 @@ class MainActivity : AppCompatActivity(), ForegroundTimerService.TimerListener {
             // Show/hide and update the lap counter
             if (lapCount > 0) {
                 binding.tvLapCounter.visibility = android.view.View.VISIBLE
-                binding.tvLapCounter.text = getString(R.string.lap_counter, lapCount)
+                binding.tvLapCounter.text = getString(R.string.lap_counter, lapCount + 1)
             } else {
                 binding.tvLapCounter.visibility = android.view.View.GONE
             }

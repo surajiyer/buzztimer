@@ -180,9 +180,9 @@ class ForegroundTimerService : Service() {
         
         // Start service as foreground with appropriate type
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(NOTIFICATION_ID, buildNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+            startForeground(NOTIFICATION_ID, buildNotification(silent = false), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
         } else {
-            startForeground(NOTIFICATION_ID, buildNotification())
+            startForeground(NOTIFICATION_ID, buildNotification(silent = false))
         }
         
         // Acquire wake lock to keep CPU active
@@ -367,8 +367,9 @@ class ForegroundTimerService : Service() {
     
     /**
      * Build the notification for the foreground service
+     * @param silent If true, the notification will not make sound or vibrate
      */
-    private fun buildNotification(): Notification {
+    private fun buildNotification(silent: Boolean = false): Notification {
         val pendingIntent = PendingIntent.getActivity(
             this,
             0,
@@ -400,6 +401,13 @@ class ForegroundTimerService : Service() {
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+        
+        // Make notification silent for regular updates to avoid constant vibration/sound
+        if (silent) {
+            notificationBuilder.setSound(null)
+                .setVibrate(null)
+                .setOnlyAlertOnce(true)
+        }
         
         // Add action buttons based on current state
         if (isPaused) {
@@ -450,18 +458,19 @@ class ForegroundTimerService : Service() {
     }
     
     /**
-     * Update the notification with current timer state
+     * Update the notification with current timer state (silent update)
      */
     private fun updateNotification() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(NOTIFICATION_ID, buildNotification())
+        notificationManager.notify(NOTIFICATION_ID, buildNotification(silent = true))
     }
     
     /**
      * Force update the notification immediately (used for state changes)
      */
     private fun forceUpdateNotification() {
-        updateNotification()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(NOTIFICATION_ID, buildNotification(silent = false))
         lastNotificationUpdate = SystemClock.elapsedRealtime()
     }
     

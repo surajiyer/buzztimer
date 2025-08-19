@@ -19,7 +19,7 @@
         android:theme="@style/Theme.BuzzTimer"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.surajiyer.buzztimer.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -30,17 +30,17 @@
         </activity>
         
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name="com.surajiyer.buzztimer.activity.SettingsActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName="com.surajiyer.buzztimer.MainActivity" />
         
         <activity
-            android:name=".activity.AboutActivity"
+            android:name="com.surajiyer.buzztimer.activity.AboutActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName="com.surajiyer.buzztimer.MainActivity" />
         
         <service
-            android:name=".service.ForegroundTimerService"
+            android:name="com.surajiyer.buzztimer.service.ForegroundTimerService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="specialUse">
