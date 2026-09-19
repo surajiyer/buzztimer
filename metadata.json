@@ -1,0 +1,6 @@
+{
+  "name": "BuzzTimer",
+  "description": "Customizable interval timer with circular sequencing and sound/vibration alerts",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
